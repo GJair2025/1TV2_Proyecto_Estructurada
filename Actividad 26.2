@@ -1,0 +1,39 @@
+#include <stdio.h>
+
+void intercambiar(float *a, float *b) {
+    float temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void ordenarBurbuja(float *vector, int longitud) {
+    for (int i = 0; i < longitud - 1; i++) {
+        for (int j = 0; j < longitud - i - 1; j++) {
+            if (*(vector + j) > *(vector + j + 1)) {
+                intercambiar(vector + j, vector + j + 1);
+            }
+        }
+    }
+}
+
+void imprimirVector(float *vector, int longitud) {
+    for (int i = 0; i < longitud; i++) {
+        printf("%.2f ", *(vector + i));
+    }
+    printf("\n");
+}
+
+int main() {
+    float numeros[] = {4.5, 2.0, 7.2, 1.8, 5.1};
+    int longitud = sizeof(numeros) / sizeof(numeros[0]);
+
+    printf("Vector original: ");
+    imprimirVector(numeros, longitud);
+
+    ordenarBurbuja(numeros, longitud);
+
+    printf("Vector ordenado: ");
+    imprimirVector(numeros, longitud);
+
+    return 0;
+}
