@@ -1,0 +1,49 @@
+#include <stdio.h>
+
+int main() {
+    int numero;
+
+    printf("Ingrese un numero: ");
+    scanf("%d", &numero);
+
+    int *ptr_numero = &numero;
+
+    if (*ptr_numero % 2 == 0) {
+        printf("El numero ingresado (%d) es par.\n", *ptr_numero);
+    } else {
+        printf("El numero ingresado (%d) es impar.\n", *ptr_numero);
+    }
+
+    if (*ptr_numero % 3 == 0) {
+        printf("El numero ingresado es multiplo de 3.\n");
+    }
+    if (*ptr_numero % 5 == 0) {
+        printf("El numero ingresado es multiplo de 5.\n");
+    }
+    if (*ptr_numero % 7 == 0) {
+        printf("El numero ingresado es multiplo de 7.\n");
+    }
+    if (*ptr_numero % 9 == 0) {
+        printf("El numero ingresado es multiplo de 9.\n");
+    }
+
+    int cuadrado = *ptr_numero * (*ptr_numero);
+    printf("El numero ingresado elevado al cuadrado es: %d\n", cuadrado);
+
+    int *ptr_cuadrado = &cuadrado;
+
+    if (*ptr_cuadrado % 3 == 0) {
+        printf("El cuadrado del numero es multiplo de 3.\n");
+    }
+    if (*ptr_cuadrado % 5 == 0) {
+        printf("El cuadrado del numero es multiplo de 5.\n");
+    }
+    if (*ptr_cuadrado % 7 == 0) {
+        printf("El cuadrado del numero es multiplo de 7.\n");
+    }
+    if (*ptr_cuadrado % 9 == 0) {
+        printf("El cuadrado del numero es multiplo de 9.\n");
+    }
+
+    return 0;
+}
