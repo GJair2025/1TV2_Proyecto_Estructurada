@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <string.h>
+
+void generarCadenaIntercalada(char *cadenaOriginal) {
+    int longitud = strlen(cadenaOriginal);
+
+    if (longitud <= 1) {
+        return;
+    }
+
+    int mitad = longitud / 2;
+    int j = 0;
+
+    // Voltea la segunda mitad de la cadena original, incluyendo el último carácter
+    for (int i = longitud - 1; i >= mitad; i--) {
+        char temp = cadenaOriginal[j];
+        cadenaOriginal[j++] = cadenaOriginal[i];
+        cadenaOriginal[i] = temp;
+    }
+
+    // Voltea la primera mitad de la cadena original
+    for (int i = mitad - 1; i >= 0; i--) {
+        char temp = cadenaOriginal[j];
+        cadenaOriginal[j++] = cadenaOriginal[i];
+        cadenaOriginal[i] = temp;
+    }
+
+    // Intercambia el penúltimo y el último carácter de la cadena original
+    char temp = cadenaOriginal[longitud - 2];
+    cadenaOriginal[longitud - 2] = cadenaOriginal[longitud - 1];
+    cadenaOriginal[longitud - 1] = temp;
+}
+
+int main() {
+    char cadenaOriginal[] = "abcdef";
+
+    printf("Cadena Original: %s\n", cadenaOriginal);
+    generarCadenaIntercalada(cadenaOriginal);
+    printf("Cadena Intercalada: %s\n", cadenaOriginal);
+
+    return 0;
+}
