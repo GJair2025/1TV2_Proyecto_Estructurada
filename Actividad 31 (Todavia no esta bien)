@@ -1,0 +1,89 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void agregarLineas(char *nombreArchivo, char *lineas[]) {
+    FILE *archivo = fopen(nombreArchivo, "a");
+    if (archivo == NULL) {
+        perror("Error al abrir el archivo");
+        exit(EXIT_FAILURE);
+    }
+
+    for (int i = 0; lineas[i] != NULL; ++i) {
+        fprintf(archivo, "%s\n", lineas[i]);
+    }
+
+    fclose(archivo);
+}
+
+void mostrarLinea(char *nombreArchivo, int numeroLinea) {
+    FILE *archivo = fopen(nombreArchivo, "r");
+    if (archivo == NULL) {
+        perror("Error al abrir el archivo");
+        exit(EXIT_FAILURE);
+    }
+
+    char buffer[256];
+    int contador = 0;
+
+    while (fgets(buffer, sizeof(buffer), archivo) != NULL) {
+        contador++;
+        if (contador == numeroLinea) {
+            printf("Línea %d: %s", numeroLinea, buffer);
+            break;
+        }
+    }
+
+    fclose(archivo);
+}
+
+int main() {
+    char nombreArchivo[] = "mi_archivo.txt";
+    char *nuevasLineas[] = {"Nueva línea 1", "Nueva línea 2", NULL};
+
+    while (1) {
+        int opcion;
+        char buffer[256]; // Buffer para la entrada del usuario
+        printf("\n1. Agregar líneas al archivo\n2. Mostrar línea del archivo\n3. Salir\nElija una opción: ");
+
+        if (fgets(buffer, sizeof(buffer), stdin) == NULL) {
+            printf("Error al leer la opción.\n");
+            return EXIT_FAILURE;
+        }
+
+        if (sscanf(buffer, "%d", &opcion) != 1) {
+            printf("Opción no válida. Inténtelo de nuevo.\n");
+            continue;
+        }
+
+        switch (opcion) {
+            case 1:
+                agregarLineas(nombreArchivo, nuevasLineas);
+                printf("Líneas agregadas al archivo.\n");
+                break;
+            case 2:
+                {
+                    int numeroLinea;
+                    printf("Ingrese el número de línea que desea mostrar: ");
+                    if (fgets(buffer, sizeof(buffer), stdin) == NULL) {
+                        printf("Error al leer el número de línea.\n");
+                        return EXIT_FAILURE;
+                    }
+
+                    if (sscanf(buffer, "%d", &numeroLinea) != 1) {
+                        printf("Número de línea no válido. Inténtelo de nuevo.\n");
+                        continue;
+                    }
+
+                    mostrarLinea(nombreArchivo, numeroLinea);
+                }
+                break;
+            case 3:
+                printf("Saliendo del programa.\n");
+                return 0;
+            default:
+                printf("Opción no válida. Inténtelo de nuevo.\n");
+        }
+    }
+
+    return 0;
+}
