@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <string.h>
+
+void invertirCadena(char *cadena) {
+    int longitud = strlen(cadena);
+
+    if (longitud <= 1) {
+        return; // No es necesario invertir una cadena de longitud 0 o 1
+    }
+
+    char *inicio = cadena;
+    char *fin = cadena + longitud - 1;
+
+    while (inicio < fin) {
+        // Intercambia los caracteres apuntados por inicio y fin
+        char temp = *inicio;
+        *inicio = *fin;
+        *fin = temp;
+
+        // Mueve los apuntadores hacia el centro de la cadena
+        inicio++;
+        fin--;
+    }
+}
+
+int main() {
+    char cadena[] = "abcdef";
+
+    printf("Cadena Original: %s\n", cadena);
+    invertirCadena(cadena);
+    printf("Cadena Invertida: %s\n", cadena);
+
+    return 0;
+}
