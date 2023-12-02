@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+int main() {
+    int circulacion[24];
+    int mayorAfluenciaHora, menorAfluenciaHora;
+    int mayorAfluencia = 0, menorAfluencia = 9999;
+    int sumaManana = 0, sumaDia = 0, sumaTarde = 0, sumaNoche = 0;
+    int promedioManana, promedioDia, promedioTarde, promedioNoche;
+
+    srand(time(NULL));
+
+    // Utilizando apuntadores
+    int *ptr_circulacion = circulacion;
+
+    for (int hora = 0; hora < 24; hora++, ptr_circulacion++) {
+        if (hora >= 6 && hora <= 9) {
+            *ptr_circulacion = rand() % (2000 - 300 + 1) + 300; // Entre 300 y 2000 autos
+        } else if (hora >= 10 && hora <= 17) {
+            *ptr_circulacion = rand() % (250 - 30 + 1) + 30; // Entre 30 y 250 autos
+        } else if (hora >= 18 && hora <= 21) {
+            *ptr_circulacion = rand() % (3200 - 1200 + 1) + 1200; // Entre 1200 y 3200 autos
+        } else {
+            *ptr_circulacion = rand() % (500 - 20 + 1) + 20; // Entre 20 y 500 autos
+        }
+
+        if (hora >= 6 && hora <= 9) {
+            sumaManana += *ptr_circulacion;
+        } else if (hora >= 10 && hora <= 17) {
+            sumaDia += *ptr_circulacion;
+        } else if (hora >= 18 && hora <= 21) {
+            sumaTarde += *ptr_circulacion;
+        } else {
+            sumaNoche += *ptr_circulacion;
+        }
+        if (*ptr_circulacion > mayorAfluencia) {
+            mayorAfluencia = *ptr_circulacion;
+            mayorAfluenciaHora = hora;
+        }
+        if (*ptr_circulacion < menorAfluencia) {
+            menorAfluencia = *ptr_circulacion;
+            menorAfluenciaHora = hora;
+        }
+    }
+
+    promedioManana = sumaManana / 4; // 4 horas de 6:00 a 9:00
+    promedioDia = sumaDia / 8;       // 8 horas de 10:00 a 17:00
+    promedioTarde = sumaTarde / 4;   // 4 horas de 18:00 a 21:00
+    promedioNoche = sumaNoche / 8;   // 8 horas de 22:00 a 5:00
+
+    printf("Circulacion de autos en cada hora:\n");
+    ptr_circulacion = circulacion;
+    for (int hora = 0; hora < 24; hora++, ptr_circulacion++) {
+        printf("Hora %02d: %d vehiculos\n", hora, *ptr_circulacion);
+    }
+    printf("\nPromedio de circulacion de autos en cada periodo:\n");
+    printf("Manana (6:00-9:00): %d vehiculos\n", promedioManana);
+    printf("Dia (10:00-17:00): %d vehiculos\n", promedioDia);
+    printf("Tarde (18:00-21:00): %d vehiculos\n", promedioTarde);
+    printf("Noche (22:00-5:00): %d vehiculos\n", promedioNoche);
+
+    printf("\nA las %02dh hubo la mayor afluencia de autos que fue de %d vehiculos.\n", mayorAfluenciaHora, mayorAfluencia);
+    printf("A las %02dh hubo la menor afluencia de autos que fue de %d vehiculos.\n", menorAfluenciaHora, menorAfluencia);
+
+    return 0;
+}
