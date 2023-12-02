@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void contarVocales(const char *cadena, int *contadorVocales) {
+    while (*cadena != '\0') {
+        char caracter = *cadena;
+
+        switch (caracter) {
+            case 'a':
+            case 'A':
+                contadorVocales[0]++;
+                break;
+            case 'e':
+            case 'E':
+                contadorVocales[1]++;
+                break;
+            case 'i':
+            case 'I':
+                contadorVocales[2]++;
+                break;
+            case 'o':
+            case 'O':
+                contadorVocales[3]++;
+                break;
+            case 'u':
+            case 'U':
+                contadorVocales[4]++;
+                break;
+        }
+
+        cadena++;
+    }
+}
+
+int main() {
+    printf("Ingrese una cadena de texto (puede tener cualquier tamano): ");
+    const int TAMANO_MAXIMO = 1000;
+    char cadena[TAMANO_MAXIMO];
+    fgets(cadena, TAMANO_MAXIMO, stdin);
+    size_t longitud = strlen(cadena);
+    if (longitud > 0 && cadena[longitud - 1] == '\n') {
+        cadena[longitud - 1] = '\0';
+    }
+
+    int contadorVocales[5] = {0}; // Contadores para las vocales a, e, i, o, u
+
+    // Cuenta las vocales en la cadena
+    contarVocales(cadena, contadorVocales);
+
+    // Imprime el resultado
+    printf("La cadena ingresada es: %s\n", cadena);
+    printf("Cantidad de letras 'a': %d\n", contadorVocales[0]);
+    printf("Cantidad de letras 'e': %d\n", contadorVocales[1]);
+    printf("Cantidad de letras 'i': %d\n", contadorVocales[2]);
+    printf("Cantidad de letras 'o': %d\n", contadorVocales[3]);
+    printf("Cantidad de letras 'u': %d\n", contadorVocales[4]);
+
+    return 0;
+}
+
