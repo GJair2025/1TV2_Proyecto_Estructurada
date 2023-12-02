@@ -1,0 +1,54 @@
+#include <stdio.h>
+
+// Definición de la estructura Empleado
+struct Empleado {
+    char nombre[50];
+    int edad;
+    float salario;
+};
+
+int main() {
+    // Declaración de un arreglo de estructuras Empleado para almacenar hasta 5 empleados
+    struct Empleado empleados[5];
+
+    char deseaContinuar;
+    int cantidadEmpleados = 0;
+
+    do {
+        printf("Ingrese los datos del empleado %d:\n", cantidadEmpleados + 1);
+
+        printf("Nombre: ");
+        fgets(empleados[cantidadEmpleados].nombre, sizeof(empleados[cantidadEmpleados].nombre), stdin);
+
+        printf("Edad: ");
+        scanf("%d", &empleados[cantidadEmpleados].edad);
+
+        printf("Salario: ");
+        scanf("%f", &empleados[cantidadEmpleados].salario);
+
+        // Limpiar el búfer de entrada después de cada entrada
+        while (getchar() != '\n');
+
+        cantidadEmpleados++;
+
+        // Preguntar si desea seguir registrando empleados
+        printf("¿Desea registrar otro empleado? (S/N): ");
+        scanf(" %c", &deseaContinuar);
+
+        // Limpiar el búfer de entrada después de la opción
+        while (getchar() != '\n');
+
+    } while (deseaContinuar == 'S' || deseaContinuar == 's');
+
+    // Imprimir la información almacenada de los empleados
+    printf("\nInformación de los empleados:\n");
+    for (int i = 0; i < cantidadEmpleados; i++) {
+        printf("Empleado %d:\n", i + 1);
+        printf("Nombre: %s", empleados[i].nombre);
+        printf("Edad: %d\n", empleados[i].edad);
+        printf("Salario: %.2f\n", empleados[i].salario);
+        printf("\n");
+    }
+
+    return 0;
+}
