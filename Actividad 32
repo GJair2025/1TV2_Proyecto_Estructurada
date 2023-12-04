@@ -1,0 +1,145 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
+typedef struct {
+    char nombre[50];
+    char nombrePadres[100];
+} Alumno;
+
+
+typedef struct Nodo {
+    Alumno alumno;
+    struct Nodo* siguiente;
+} Nodo;
+
+
+void cargarListaDesdeArchivo(Nodo** lista);
+void agregarAlumno(Nodo** lista);
+void mostrarLista(Nodo* lista);
+void guardarListaEnArchivo(Nodo* lista);
+void liberarLista(Nodo** lista);
+
+int main() {
+    Nodo* lista = NULL;
+    int opcion;
+
+    do {
+        printf("\nMenu:\n");
+        printf("1.- Cargar lista de alumnos desde el archivo\n");
+        printf("2.- Agregar alumnos a la lista\n");
+        printf("3.- Mostrar lista de alumnos\n");
+        printf("4.- Guardar lista de alumnos en archivo\n");
+        printf("0.- Salir\n");
+        printf("Seleccione una opcion: ");
+        scanf("%d", &opcion);
+
+        switch (opcion) {
+            case 1:
+                cargarListaDesdeArchivo(&lista);
+                break;
+            case 2:
+                agregarAlumno(&lista);
+                break;
+            case 3:
+                mostrarLista(lista);
+                break;
+            case 4:
+                guardarListaEnArchivo(lista);
+                break;
+            case 0:
+                liberarLista(&lista);
+                printf("Saliendo del programa.\n");
+                break;
+            default:
+                printf("Opcion no valida. Intente de nuevo.\n");
+                break;
+        }
+    } while (opcion != 0);
+
+    return 0;
+}
+
+void cargarListaDesdeArchivo(Nodo** lista) {
+    FILE* archivo = fopen("Alumnos.dat", "rb");
+    if (archivo == NULL) {
+        printf("No se pudo abrir el archivo.\n");
+        return;
+    }
+
+    liberarLista(lista);
+
+    Alumno alumno;
+    if (fread(&alumno, sizeof(Alumno), 1, archivo) != 1) {
+        fclose(archivo);
+        printf("La lista esta vacia porque el archivo de carga esta vacio.\n");
+        return;
+    }
+
+    do {
+        Nodo* nuevoNodo = (Nodo*)malloc(sizeof(Nodo));
+        nuevoNodo->alumno = alumno;
+        nuevoNodo->siguiente = *lista;
+        *lista = nuevoNodo;
+    } while (fread(&alumno, sizeof(Alumno), 1, archivo) == 1);
+
+    fclose(archivo);
+    printf("Lista cargada desde el archivo.\n");
+}
+
+void agregarAlumno(Nodo** lista) {
+    Alumno nuevoAlumno;
+    printf("Ingrese el nombre del alumno: ");
+    getchar(); 
+    fgets(nuevoAlumno.nombre, sizeof(nuevoAlumno.nombre), stdin);
+    nuevoAlumno.nombre[strcspn(nuevoAlumno.nombre, "\n")] = '\0';
+
+    printf("Ingrese el nombre de los padres o tutores: ");
+    fgets(nuevoAlumno.nombrePadres, sizeof(nuevoAlumno.nombrePadres), stdin);
+    nuevoAlumno.nombrePadres[strcspn(nuevoAlumno.nombrePadres, "\n")] = '\0'; 
+
+    Nodo* nuevoNodo = (Nodo*)malloc(sizeof(Nodo));
+    nuevoNodo->alumno = nuevoAlumno;
+    nuevoNodo->siguiente = *lista;
+    *lista = nuevoNodo;
+
+    printf("Alumno agregado a la lista.\n");
+}
+
+void mostrarLista(Nodo* lista) {
+    if (lista == NULL) {
+        printf("La lista esta vacia.\n");
+        return;
+    }
+
+    printf("Lista de alumnos:\n");
+    while (lista != NULL) {
+        printf("Nombre: %s\nPadres o tutores: %s\n\n", lista->alumno.nombre, lista->alumno.nombrePadres);
+        lista = lista->siguiente;
+    }
+}
+
+void guardarListaEnArchivo(Nodo* lista) {
+    FILE* archivo = fopen("Alumnos.dat", "wb");
+    if (archivo == NULL) {
+        printf("No se pudo abrir el archivo para guardar la lista.\n");
+        return;
+    }
+
+    while (lista != NULL) {
+        fwrite(&lista->alumno, sizeof(Alumno), 1, archivo);
+        lista = lista->siguiente;
+    }
+
+    fclose(archivo);
+    printf("Lista de alumnos guardada en el archivo.\n");
+}
+
+void liberarLista(Nodo** lista) {
+    while (*lista != NULL) {
+        Nodo* temp = *lista;
+        *lista = (*lista)->siguiente;
+        free(temp);
+    }
+}
