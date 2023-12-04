@@ -1,0 +1,161 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct Animal {
+    char nombreComun[50];
+    char nombreCientifico[50];
+    char especie[50];
+    char subespecie[50];
+    char lugarHabita[50];
+    int numEjemplares;
+    char enPeligro;
+    char clase[20];
+};
+
+void cargarFichas(struct Animal animales[], int *numFichas);
+void mostrarNombresOrdenados(struct Animal animales[], int numFichas);
+void mostrarFicha(struct Animal animal);
+void agregarFicha(struct Animal animales[], int *numFichas);
+void guardarFichas(struct Animal animales[], int numFichas);
+
+int main() {
+    struct Animal animales[100];
+    int numFichas = 0;
+
+    cargarFichas(animales, &numFichas);
+
+    int opcion;
+    do {
+        printf("\n*** Menu ***\n");
+        printf("1. Mostrar nombres ordenados alfabeticamente\n");
+        printf("2. Ver ficha por numero\n");
+        printf("3. Agregar nueva ficha\n");
+        printf("4. Guardar fichas en archivo\n");
+        printf("5. Salir\n");
+        printf("Ingrese su opcion: ");
+        scanf("%d", &opcion);
+
+        switch (opcion) {
+            case 1:
+                mostrarNombresOrdenados(animales, numFichas);
+                break;
+            case 2:
+                mostrarNombresOrdenados(animales, numFichas);
+                printf("Ingrese el numero de ficha que desea ver: ");
+                int num;
+                scanf("%d", &num);
+                if (num >= 1 && num <= numFichas) {
+                    mostrarFicha(animales[num - 1]);
+                } else {
+                    printf("Numero de ficha no valido.\n");
+                }
+                break;
+            case 3:
+                agregarFicha(animales, &numFichas);
+                break;
+            case 4:
+                guardarFichas(animales, numFichas);
+                break;
+            case 5:
+                printf("Saliendo del programa.\n");
+                break;
+            default:
+                printf("Opcion no valida. Intente de nuevo.\n");
+        }
+    } while (opcion != 5);
+
+    return 0;
+}
+
+void cargarFichas(struct Animal animales[], int *numFichas) {
+    FILE *archivo = fopen("animales.txt", "r");
+    if (archivo == NULL) {
+        printf("No se pudo abrir el archivo.\n");
+        return;
+    }
+
+    while (fread(&animales[*numFichas], sizeof(struct Animal), 1, archivo) == 1) {
+        (*numFichas)++;
+    }
+
+    fclose(archivo);
+}
+
+void mostrarNombresOrdenados(struct Animal animales[], int numFichas) {
+    if (numFichas == 0) {
+        printf("No hay fichas cargadas.\n");
+        return;
+    }
+
+    for (int i = 0; i < numFichas - 1; i++) {
+        for (int j = i + 1; j < numFichas; j++) {
+            if (strcmp(animales[i].nombreComun, animales[j].nombreComun) > 0) {
+                struct Animal temp = animales[i];
+                animales[i] = animales[j];
+                animales[j] = temp;
+            }
+        }
+    }
+
+    printf("\nNombres ordenados alfabeticamente:\n");
+    for (int i = 0; i < numFichas; i++) {
+        printf("%d. %s\n", i + 1, animales[i].nombreComun);
+    }
+}
+
+void mostrarFicha(struct Animal animal) {
+    printf("\n*** Ficha del Animal ***\n");
+    printf("Nombre Comun: %s\n", animal.nombreComun);
+    printf("Nombre Cientifico: %s\n", animal.nombreCientifico);
+    printf("Especie: %s\n", animal.especie);
+    printf("Subespecie: %s\n", animal.subespecie);
+    printf("Lugar donde habita: %s\n", animal.lugarHabita);
+    printf("Numero estimado de ejemplares: %d\n", animal.numEjemplares);
+    printf("En peligro de extincion: %c\n", animal.enPeligro);
+    printf("Clase: %s\n", animal.clase);
+}
+
+void agregarFicha(struct Animal animales[], int *numFichas) {
+    printf("\n*** Agregar Nueva Ficha ***\n");
+
+    printf("Nombre Comun: ");
+    scanf("%s", animales[*numFichas].nombreComun);
+
+    printf("Nombre Cientifico: ");
+    scanf("%s", animales[*numFichas].nombreCientifico);
+
+    printf("Especie: ");
+    scanf("%s", animales[*numFichas].especie);
+
+    printf("Subespecie: ");
+    scanf("%s", animales[*numFichas].subespecie);
+
+    printf("Lugar donde habita: ");
+    scanf("%s", animales[*numFichas].lugarHabita);
+
+    printf("Numero estimado de ejemplares: ");
+    scanf("%d", &animales[*numFichas].numEjemplares);
+
+    printf("En peligro de extincion (S/N): ");
+    scanf(" %c", &animales[*numFichas].enPeligro);
+
+    printf("Clase: ");
+    scanf("%s", animales[*numFichas].clase);
+
+    (*numFichas)++;
+}
+
+void guardarFichas(struct Animal animales[], int numFichas) {
+    FILE *archivo = fopen("animales.txt", "w");
+    if (archivo == NULL) {
+        printf("No se pudo abrir el archivo para escribir.\n");
+        return;
+    }
+
+    fwrite(animales, sizeof(struct Animal), numFichas, archivo);
+
+    fclose(archivo);
+
+    printf("Fichas guardadas en el archivo correctamente.\n");
+}
