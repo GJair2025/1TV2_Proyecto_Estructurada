@@ -1,42 +1,38 @@
 #include <stdio.h>
 #include <string.h>
 
-void generarCadenaIntercalada(char *cadenaOriginal) {
-    int longitud = strlen(cadenaOriginal);
+void generarCadenaInterpolada(char *cadenaEntrada, char *cadenaSalida) {
+    int longitud = strlen(cadenaEntrada);
 
-    if (longitud <= 1) {
-        return;
+    int centro = longitud / 2;
+    int izquierda = centro - 1;
+    int derecha = (longitud % 2) ? centro + 1 : centro;
+
+    int i, j = 0;
+
+    for (i = izquierda; i >= 0; i--) {
+        cadenaSalida[j++] = cadenaEntrada[i];
+        if (derecha < longitud) {
+            cadenaSalida[j++] = cadenaEntrada[derecha];
+            derecha++;
+        }
     }
 
-    int mitad = longitud / 2;
-    int j = 0;
-
-    // Voltea la segunda mitad de la cadena original, incluyendo el último carácter
-    for (int i = longitud - 1; i >= mitad; i--) {
-        char temp = cadenaOriginal[j];
-        cadenaOriginal[j++] = cadenaOriginal[i];
-        cadenaOriginal[i] = temp;
-    }
-
-    // Voltea la primera mitad de la cadena original
-    for (int i = mitad - 1; i >= 0; i--) {
-        char temp = cadenaOriginal[j];
-        cadenaOriginal[j++] = cadenaOriginal[i];
-        cadenaOriginal[i] = temp;
-    }
-
-    // Intercambia el penúltimo y el último carácter de la cadena original
-    char temp = cadenaOriginal[longitud - 2];
-    cadenaOriginal[longitud - 2] = cadenaOriginal[longitud - 1];
-    cadenaOriginal[longitud - 1] = temp;
+    cadenaSalida[j] = '\0';
 }
 
 int main() {
-    char cadenaOriginal[] = "abcdef";
+    char cadenaEntrada[50];
+    char cadenaSalida[50];
 
-    printf("Cadena Original: %s\n", cadenaOriginal);
-    generarCadenaIntercalada(cadenaOriginal);
-    printf("Cadena Intercalada: %s\n", cadenaOriginal);
+    printf("Ingrese la cadena: ");
+    fgets(cadenaEntrada, sizeof(cadenaEntrada), stdin);
+    cadenaEntrada[strcspn(cadenaEntrada, "\n")] = '\0'; // Elimina el salto de línea de fgets
+
+    generarCadenaInterpolada(cadenaEntrada, cadenaSalida);
+
+    printf("Cadena de entrada: %s\n", cadenaEntrada);
+    printf("Cadena de salida: %s\n", cadenaSalida);
 
     return 0;
 }
