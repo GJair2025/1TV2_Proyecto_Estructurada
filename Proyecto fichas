@@ -148,7 +148,7 @@ void agregarFicha(struct Animal animales[], int *numFichas) {
 }
 
 void guardarFichas(struct Animal animales[], int numFichas) {
-    FILE *archivo = fopen("animales.txt", "w");
+    FILE *archivo = fopen("animales.txt", "a"); // Cambiado a modo de adición ("a")
     if (archivo == NULL) {
         printf("No se pudo abrir el archivo para escribir.\n");
         return;
