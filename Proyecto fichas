@@ -69,7 +69,7 @@ int main() {
 }
 
 void cargarFichas(struct Animal animales[], int *numFichas) {
-    FILE *archivo = fopen("animales.txt", "r");
+    FILE *archivo = fopen("animales.bin", "rb");
     if (archivo == NULL) {
         printf("No se pudo abrir el archivo.\n");
         return;
@@ -116,23 +116,24 @@ void mostrarFicha(struct Animal animal) {
     printf("Clase: %s\n", animal.clase);
 }
 
+
 void agregarFicha(struct Animal animales[], int *numFichas) {
     printf("\n*** Agregar Nueva Ficha ***\n");
 
     printf("Nombre Comun: ");
-    scanf("%s", animales[*numFichas].nombreComun);
+    scanf("%49s", animales[*numFichas].nombreComun);
 
     printf("Nombre Cientifico: ");
-    scanf("%s", animales[*numFichas].nombreCientifico);
+    scanf("%49s", animales[*numFichas].nombreCientifico);
 
     printf("Especie: ");
-    scanf("%s", animales[*numFichas].especie);
+    scanf("%49s", animales[*numFichas].especie);
 
     printf("Subespecie: ");
-    scanf("%s", animales[*numFichas].subespecie);
+    scanf("%49s", animales[*numFichas].subespecie);
 
     printf("Lugar donde habita: ");
-    scanf("%s", animales[*numFichas].lugarHabita);
+    scanf("%49s", animales[*numFichas].lugarHabita);
 
     printf("Numero estimado de ejemplares: ");
     scanf("%d", &animales[*numFichas].numEjemplares);
@@ -141,7 +142,7 @@ void agregarFicha(struct Animal animales[], int *numFichas) {
     scanf(" %c", &animales[*numFichas].enPeligro);
 
     printf("Clase: ");
-    scanf("%s", animales[*numFichas].clase);
+    scanf("%19s", animales[*numFichas].clase);
 
     (*numFichas)++;
 }
@@ -153,7 +154,17 @@ void guardarFichas(struct Animal animales[], int numFichas) {
         return;
     }
 
-    fwrite(animales, sizeof(struct Animal), numFichas, archivo);
+    for (int i = 0; i < numFichas; i++) {
+        fprintf(archivo, "*** Ficha del Animal ***\n");
+        fprintf(archivo, "Nombre Comun: %s\n", animales[i].nombreComun);
+        fprintf(archivo, "Nombre Cientifico: %s\n", animales[i].nombreCientifico);
+        fprintf(archivo, "Especie: %s\n", animales[i].especie);
+        fprintf(archivo, "Subespecie: %s\n", animales[i].subespecie);
+        fprintf(archivo, "Lugar donde habita: %s\n", animales[i].lugarHabita);
+        fprintf(archivo, "Numero estimado de ejemplares: %d\n", animales[i].numEjemplares);
+        fprintf(archivo, "En peligro de extincion: %c\n", animales[i].enPeligro);
+        fprintf(archivo, "Clase: %s\n\n", animales[i].clase);
+    }
 
     fclose(archivo);
 
