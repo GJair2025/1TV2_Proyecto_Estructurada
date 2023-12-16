@@ -11,19 +11,23 @@ struct Animal {
     int numEjemplares;
     char enPeligro;
     char clase[20];
+    int numFicha; // Nuevo campo para el número de ficha
 };
 
+// Prototipos de funciones
 void cargarFichas(struct Animal animales[], int *numFichas);
 void mostrarNombresOrdenados(struct Animal animales[], int numFichas);
 void mostrarFicha(struct Animal animal);
-void agregarFicha(struct Animal animales[], int *numFichas);
-void guardarFichas(struct Animal animales[], int numFichas);
+void agregarFicha(struct Animal animales[], int *numFichas, int *numFichaActual);
+void guardarFichas(struct Animal animales[], int numFichas, int numFichaActual);
 
 int main() {
-    struct Animal animales[100];
+    struct Animal animales[1000];
     int numFichas = 0;
 
     cargarFichas(animales, &numFichas);
+
+    int numFichaActual = numFichas + 1; // Iniciar el número de ficha actual
 
     int opcion;
     do {
@@ -52,10 +56,10 @@ int main() {
                 }
                 break;
             case 3:
-                agregarFicha(animales, &numFichas);
+                agregarFicha(animales, &numFichas, &numFichaActual);
                 break;
             case 4:
-                guardarFichas(animales, numFichas);
+                guardarFichas(animales, numFichas, numFichaActual);
                 break;
             case 5:
                 printf("Saliendo del programa.\n");
@@ -69,7 +73,7 @@ int main() {
 }
 
 void cargarFichas(struct Animal animales[], int *numFichas) {
-    FILE *archivo = fopen("animales.bin", "rb");
+    FILE *archivo = fopen("animales.txt", "r");
     if (archivo == NULL) {
         printf("No se pudo abrir el archivo.\n");
         return;
@@ -116,24 +120,23 @@ void mostrarFicha(struct Animal animal) {
     printf("Clase: %s\n", animal.clase);
 }
 
-
-void agregarFicha(struct Animal animales[], int *numFichas) {
+void agregarFicha(struct Animal animales[], int *numFichas, int *numFichaActual) {
     printf("\n*** Agregar Nueva Ficha ***\n");
 
     printf("Nombre Comun: ");
-    scanf("%49s", animales[*numFichas].nombreComun);
+    scanf("%s", animales[*numFichas].nombreComun);
 
     printf("Nombre Cientifico: ");
-    scanf("%49s", animales[*numFichas].nombreCientifico);
+    scanf("%s", animales[*numFichas].nombreCientifico);
 
     printf("Especie: ");
-    scanf("%49s", animales[*numFichas].especie);
+    scanf("%s", animales[*numFichas].especie);
 
     printf("Subespecie: ");
-    scanf("%49s", animales[*numFichas].subespecie);
+    scanf("%s", animales[*numFichas].subespecie);
 
     printf("Lugar donde habita: ");
-    scanf("%49s", animales[*numFichas].lugarHabita);
+    scanf("%s", animales[*numFichas].lugarHabita);
 
     printf("Numero estimado de ejemplares: ");
     scanf("%d", &animales[*numFichas].numEjemplares);
@@ -142,20 +145,26 @@ void agregarFicha(struct Animal animales[], int *numFichas) {
     scanf(" %c", &animales[*numFichas].enPeligro);
 
     printf("Clase: ");
-    scanf("%19s", animales[*numFichas].clase);
+    scanf("%s", animales[*numFichas].clase);
 
+    // Almacenar el número de ficha
+    animales[*numFichas].numFicha = *numFichaActual;
+
+    // Incrementar el número de fichas y el número de la ficha actual
     (*numFichas)++;
+    (*numFichaActual)++;
+    printf("Ficha %d agregada correctamente.\n", *numFichaActual);
 }
 
-void guardarFichas(struct Animal animales[], int numFichas) {
-    FILE *archivo = fopen("animales.txt", "a"); // Cambiado a modo de adición ("a")
+void guardarFichas(struct Animal animales[], int numFichas, int numFichaActual) {
+    FILE *archivo = fopen("animales.txt", "w");
     if (archivo == NULL) {
         printf("No se pudo abrir el archivo para escribir.\n");
         return;
     }
 
     for (int i = 0; i < numFichas; i++) {
-        fprintf(archivo, "*** Ficha del Animal ***\n");
+        fprintf(archivo, "*** Ficha %d del Animal ***\n", animales[i].numFicha); // Guardar el número de la ficha
         fprintf(archivo, "Nombre Comun: %s\n", animales[i].nombreComun);
         fprintf(archivo, "Nombre Cientifico: %s\n", animales[i].nombreCientifico);
         fprintf(archivo, "Especie: %s\n", animales[i].especie);
